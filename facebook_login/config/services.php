@@ -34,7 +34,8 @@ return [
         'key' => env('STRIPE_KEY'),
         'secret' => env('STRIPE_SECRET'),
     ],
-
+    // it can use for every social networks(facebook,github,twitter,..)
+    // only change facebook to the others and edit id and secret key and redirect url
     'facebook' => [
     'client_id' => '616496781878936',
     'client_secret' => '8f26daaae2db5734645d5d9f053f4985',
