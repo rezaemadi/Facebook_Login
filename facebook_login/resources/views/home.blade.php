@@ -8,8 +8,9 @@
                 <div class="panel-heading">Dashboard</div>
 
                 <div class="panel-body">
-                    You are logged in!
+                    You are logged in: social sweethearts® GmbH Breite!
                 </div>
+                
             </div>
         </div>
     </div>
