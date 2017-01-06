@@ -15,12 +15,12 @@ class CreateUsersTable extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
           $table->increments('id');
-          $table->string('facebook_id')->unique();
+          $table->string('facebook_id')->unique()->default('0000000000');
           $table->string('name');
-          $table->string('avatar');
+          $table->string('avatar')->default('default.svg');
           $table->string('email')->unique();
-          $table->string('password');
-          $table->boolean('is_active');
+          $table->string('password')->default('0000000000');
+          $table->boolean('is_active')->default('1');
           $table->rememberToken();
           $table->timestamps();
         });
