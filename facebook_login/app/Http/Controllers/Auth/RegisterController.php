@@ -134,7 +134,76 @@ class RegisterController extends Controller
         $data =array('user'=> $user,);
         // show dashboard form(view) to current user that login via facebook
         return View::make("home",$data);
+    }
 
+    /**
+     * Obtain the user information from facebook if user uninstall app from facebook.
+     *
+     * @return Response
+     */
+    public function handleProvider_Deauthorize_callback($signed_request)
+    {
+      // 1 get user information with facebook_id
+      // 2 find user in user table
+      // 3 update  is_active field fron 1 to 0
+
+      try
+      {
+          // Get user information from facebook
+          // run facebook function for unauthoriz user , when user uninstall app from facebook
+          $userinformation=$this->parse_signed_request($signed_request);
+      }
+      catch (\Exception $e) {
+
+        return redirect('/');
+      }
+
+      // check user exist in our database this means user registered in our application
+      $user = User::where('facebook_id', $userinformation->user_id)->first();
+
+      // if user  exist update user information in user table
+      if($user)
+      {
+          // update user  is_active field
+          $flight->is_active = '0';
+          $flight->save();
+          // redirect user to wellcome page
+          return redirect('/');
+      }
+
+    }
+
+    //facebook has this instruction for Deauthorize_callback
+    /*
+    What this means is that when it is POSTed to your app, you will need to parse and verify it before it can be used. This is performed in three steps:
+    Split the signed request into two parts delineated by a '.' character (eg. 238fsdfsd.oijdoifjsidf899)
+    Decode the first part - the encoded signature - from base64url
+    Decode the second part - the payload - from base64url and then decode the resultant JSON object
+    */
+    public function parse_signed_request($signed_request)
+    {
+      list($encoded_sig, $payload) = explode('.', $signed_request, 2);
+
+        $secret = "8f26daaae2db5734645d5d9f053f4985"; // Use your app secret here
+
+        // decode the data
+        $sig = base64_url_decode($encoded_sig);
+        $data = json_decode(base64_url_decode($payload), true);
+
+        // confirm the signature
+        $expected_sig = hash_hmac('sha256', $payload, $secret, $raw = true);
+        if ($sig !== $expected_sig) {
+          error_log('Bad Signed JSON signature!');
+          return null;
+        }
+
+        return $data;
+      }
+
+
+    public function base64_url_decode($input)
+    {
+        return base64_decode(strtr($input, '-_', '+/'));
     }
 
 }

@@ -22,3 +22,5 @@ Route::get('/home', 'HomeController@index');
 Route::get('auth/facebook', 'Auth\RegisterController@redirectToProvider');
 //get user information from callback url via facebook
 Route::get('auth/facebook/callback', 'Auth\RegisterController@handleProviderCallback');
+// if user uninstall app from facebook this function run and change user status is active to zero
+Route::get('auth/facebook/Deauthorize_callback', 'Auth\RegisterController@handleProvider_Deauthorize_callback');
